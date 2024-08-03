@@ -10,6 +10,8 @@ include 'login.php';
 include 'forgetPassword.php';
 include 'verify.php';
 require_once 'sessionHandler.php';
+include 'appointments.php';
+
 
 $db = new DbConnect();
 $conn = $db->connect();
@@ -42,6 +44,32 @@ switch ($endpoint) {
         break;
     case 'searchUserByEmail':
         searchUserByEmail($conn);
+        break;    
+    case 'createAppointment':
+        createAppointment($conn);
+        break;
+   case 'getAppointment':
+    if (isset($_GET['user_id'])) {
+        getAppointment($conn, $_GET['user_id']);
+    } else {
+        echo json_encode(['status' => 'error', 'message' => 'Appointment ID not provided']);
+    }
+    break;
+
+    case 'deleteAppointment':
+        if (isset($_GET['user_id'])) {
+            deleteAppointment($conn, $_GET['user_id']);
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Appointment ID not provided']);
+        }
+        break;
+
+    case 'updateAppointment':
+        if (isset($_GET['id'])) {
+            updateAppointment($conn, $_GET['id']);
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Appointment ID not provided']);
+        }
         break;    
     default:
         echo json_encode(['status' => 'error', 'message' => 'Invalid Endpoint']);
