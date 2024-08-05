@@ -11,7 +11,10 @@ include 'forgetPassword.php';
 include 'verify.php';
 require_once 'sessionHandler.php';
 include 'appointments.php';
-
+include 'patientInfo.php';
+include 'insuranceInfo.php';
+include 'patientIntake.php';
+include 'ConsentForm.php';
 
 $db = new DbConnect();
 $conn = $db->connect();
@@ -57,12 +60,98 @@ switch ($endpoint) {
     break;
 
     case 'deleteAppointment':
-        if (isset($_GET['user_id'])) {
-            deleteAppointment($conn, $_GET['user_id']);
-        } else {
-            echo json_encode(['status' => 'error', 'message' => 'Appointment ID not provided']);
-        }
+            deleteAppointment($conn);
+    
         break;
+    case 'insertPatientInfo':
+            insertPatientInfo($conn);
+            break;
+    case 'getPatientInfo':
+            if (isset($_GET['patient_id'])) {
+                getPatientInfo($conn, $_GET['patient_id']);
+            } else {
+                echo json_encode(['status' => 'error', 'message' => 'Patient ID not provided']);
+            }
+            break;    
+    case 'updatePatientInfo':
+            updatePatientInfo($conn);
+                break;
+    case 'insertEmergencyContact':
+                    insertEmergencyContact($conn);
+                    break;
+     case 'getEmergencyContacts':
+                if (isset($_GET['patient_id'])) {
+                        getEmergencyInfo($conn, $_GET['patient_id']);
+                    } else {
+                        echo json_encode(['status' => 'error', 'message' => 'Patient ID not provided']);
+                    }
+                    break;    
+    case 'updateEmergencyContact':
+                updateEmergencyContact($conn);
+                        break;
+                
+    case 'insertInsuranceInfo':
+        insertInsuranceInfo($conn);
+                            break;
+    case 'getInsuranceInfo':
+                        if (isset($_GET['patient_id'])) {
+                            getInsuranceInfo($conn, $_GET['patient_id']);
+                            } else {
+                                echo json_encode(['status' => 'error', 'message' => 'Patient ID not provided']);
+                            }
+                            break;    
+    case 'updateInsuranceInfo':
+        updateInsuranceInfo($conn);
+                                break;
+
+
+                                case 'insertPatientIntake':
+                                    insertPatientIntake($conn);
+                                    break;
+                     case 'getPatientIntake':
+                                if (isset($_GET['patient_id'])) {
+                                    getPatientIntake($conn, $_GET['patient_id']);
+                                    } else {
+                                        echo json_encode(['status' => 'error', 'message' => 'Patient ID not provided']);
+                                    }
+                                    break;    
+                    case 'updatePatientIntake':
+                        updatePatientIntake($conn);
+                                        break;                             
+
+
+                                        case 'insertConsentForm':
+                                            if (isset($_FILES['consentForm']) && isset($_POST['patient_id'])) {
+                                                insertConsentForm($conn, $_POST['patient_id'], $_FILES['consentForm']);
+                                            } else {
+                                                echo json_encode(['status' => 'error', 'message' => 'Patient ID or file not provided']);
+                                            }
+                                            break;
+                                    
+                                        case 'updateConsentForm':
+                                            if (isset($_FILES['consentForm']) && isset($_POST['patient_id'])) {
+                                                updateConsentForm($conn, $_POST['patient_id'], $_FILES['consentForm']);
+                                            } else {
+                                                echo json_encode(['status' => 'error', 'message' => 'Patient ID or file not provided']);
+                                            }
+                                            break;
+                                        case 'getConsentForm':
+                                            if(isset($_GET['patient_id'])) {
+                                                getConsentForm($conn,$_GET['patient_id']);
+                                            }else {
+                                                echo json_encode(['status' => 'error', 'message' => 'Patient ID not provided']);
+                                            }
+                                            break;
+                                        case 'deleteConsentForm':
+                                            if (isset($_GET['patient_id'])) {
+                                                deleteConsentForm($conn, $_GET['patient_id']);
+                                            } else {
+                                                echo json_encode(['status' => 'error', 'message' => 'Patient ID not provided']);
+                                            }
+                                            break;       
+                                        
+
+
 
     case 'updateAppointment':
         if (isset($_GET['id'])) {

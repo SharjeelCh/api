@@ -10,7 +10,7 @@ function handleForgetPassword($conn) {
     $response = [];
 
     if ($validEmail && $validPass) {
-        $sql = "UPDATE user SET password = :password WHERE email = :email";
+        $sql = "UPDATE patient SET password = :password WHERE email = :email";
         $stmt = $conn->prepare($sql);
         $stmt->bindParam(':email', $user->email);
         $stmt->bindParam(':password', $user->password);
@@ -35,7 +35,7 @@ function handleForgetPassword($conn) {
 function searchUserByEmail($conn) {
     if (isset($_GET['email'])) {
         $email = $_GET['email'];
-        $sql = "SELECT * FROM user WHERE email = :email";
+        $sql = "SELECT * FROM patient WHERE email = :email";
         $stmt = $conn->prepare($sql);
         $stmt->bindParam(':email', $email);
         $stmt->execute();

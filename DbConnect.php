@@ -4,7 +4,7 @@
 	*/
 	class DbConnect {
 		private $server = 'localhost';
-		private $dbname = 'test_app';
+		private $dbname = 'test';
 		private $user = 'root';
 		private $pass = '';
 

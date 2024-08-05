@@ -7,7 +7,7 @@ function handleVerify($conn) {
         return;
     }
 
-    $sql = "UPDATE user SET is_verified = 1 WHERE verification_token = :token";
+    $sql = "UPDATE patient SET is_verified = 1 WHERE verification_token = :token";
     $stmt = $conn->prepare($sql);
     $stmt->bindParam(':token', $token);
 

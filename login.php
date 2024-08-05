@@ -6,7 +6,7 @@ function handleLogin($conn) {
         $email = $_GET['email'];
         $password = $_GET['password'];
 
-        $emailCheckSql = "SELECT * FROM user WHERE email = :email";
+        $emailCheckSql = "SELECT * FROM patient WHERE email = :email";
         $stmt = $conn->prepare($emailCheckSql);
         $stmt->bindParam(':email', $email);
         $stmt->execute();
@@ -27,7 +27,7 @@ function handleLogin($conn) {
             echo json_encode(['status' => 'error', 'message' => 'Email not found']);
         }
     } else {
-        $sql = "SELECT * FROM user";
+        $sql = "SELECT * FROM patient";
         $stmt = $conn->prepare($sql);
         $stmt->execute();
         $users = $stmt->fetchAll(PDO::FETCH_ASSOC);

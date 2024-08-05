@@ -43,10 +43,11 @@ function handleSignup($conn) {
     $PASSWORD_REGEX = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/';
 
     $user = json_decode(file_get_contents('php://input'));
-    $sql = "INSERT INTO user (id, name, email, password, created_at, verification_token, is_verified) 
-            VALUES (null, :name, :email, :password, :created_at, :verification_token, 0)";
+    $sql = "INSERT INTO patient (id, first_name, last_name, email, password, created_at, verification_token, is_verified, is_veteran) 
+            VALUES (null, :first_name, :last_name, :email, :password, :created_at, :verification_token, 0, 0)";
     $stmt = $conn->prepare($sql);
-    $stmt->bindParam(':name', $user->name);
+    $stmt->bindParam(':first_name', $user->first_name);
+    $stmt->bindParam(':last_name', $user->last_name);
     $stmt->bindParam(':email', $user->email);
     $stmt->bindParam(':password', $user->password);
 
