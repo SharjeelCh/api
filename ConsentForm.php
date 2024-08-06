@@ -35,13 +35,19 @@ function insertConsentForm($conn) {
         return;
     }
 
-    // Save the file content as a BLOB
-    $fileContent = file_get_contents($consentForm['tmp_name']);
+    // Move the file to the uploads directory with patient_id in the file name
+    $uploadDir = 'uploads/consent/';
+    $fileName = $patient_id . '_' . basename($consentForm['name']);
+    $filePath = $uploadDir . $fileName;
+    if (!move_uploaded_file($consentForm['tmp_name'], $filePath)) {
+        echo json_encode(['status' => 'error', 'message' => 'Failed to save consent form']);
+        return;
+    }
 
-    // Insert consent form
+    // Insert consent form path
     $sql = "UPDATE patient SET consentForm = :consentForm WHERE id = :patient_id";
     $stmt = $conn->prepare($sql);
-    $stmt->bindParam(':consentForm', $fileContent, PDO::PARAM_LOB);
+    $stmt->bindParam(':consentForm', $filePath);
     $stmt->bindParam(':patient_id', $patient_id);
 
     if ($stmt->execute()) {
@@ -67,7 +73,7 @@ function getConsentForm($conn, $patient_id) {
     // Get consent form
     if ($patient['consentForm']) {
         header('Content-Type: application/pdf');
-        echo $patient['consentForm'];
+        readfile($patient['consentForm']);
     } else {
         echo json_encode(['status' => 'error', 'message' => 'Consent form not found']);
     }
@@ -75,7 +81,7 @@ function getConsentForm($conn, $patient_id) {
 
 function deleteConsentForm($conn, $patient_id) {
     // Check if patient exists
-    $sql = "SELECT id FROM patient WHERE id = :patient_id";
+    $sql = "SELECT id, consentForm FROM patient WHERE id = :patient_id";
     $stmt = $conn->prepare($sql);
     $stmt->bindParam(':patient_id', $patient_id);
     $stmt->execute();
@@ -87,6 +93,10 @@ function deleteConsentForm($conn, $patient_id) {
     }
 
     // Delete consent form
+    if ($patient['consentForm'] && file_exists($patient['consentForm'])) {
+        unlink($patient['consentForm']);
+    }
+    
     $sql = "UPDATE patient SET consentForm = NULL WHERE id = :patient_id";
     $stmt = $conn->prepare($sql);
     $stmt->bindParam(':patient_id', $patient_id);
@@ -97,4 +107,5 @@ function deleteConsentForm($conn, $patient_id) {
         echo json_encode(['status' => 'error', 'message' => 'Failed to delete consent form']);
     }
 }
+
 ?>

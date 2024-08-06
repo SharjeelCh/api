@@ -93,13 +93,23 @@ switch ($endpoint) {
     case 'insertInsuranceInfo':
         insertInsuranceInfo($conn);
                             break;
+    case 'insertInsuranceInfoS':
+        insertInsuranceInfoS($conn);
+                            break;
     case 'getInsuranceInfo':
                         if (isset($_GET['patient_id'])) {
                             getInsuranceInfo($conn, $_GET['patient_id']);
                             } else {
                                 echo json_encode(['status' => 'error', 'message' => 'Patient ID not provided']);
                             }
-                            break;    
+                            break;
+    case 'getInsuranceInfoS':
+                        if (isset($_GET['patient_id'])) {
+                            getInsuranceInfoS($conn, $_GET['patient_id']);
+                             } else {
+                            echo json_encode(['status' => 'error', 'message' => 'Patient ID not provided']);
+                            }
+                            break;                                
     case 'updateInsuranceInfo':
         updateInsuranceInfo($conn);
                                 break;

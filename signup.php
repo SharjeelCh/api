@@ -43,6 +43,19 @@ function handleSignup($conn) {
     $PASSWORD_REGEX = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/';
 
     $user = json_decode(file_get_contents('php://input'));
+
+    // Check if email is already registered
+    $emailCheckSQL = "SELECT COUNT(*) FROM patient WHERE email = :email";
+    $emailCheckStmt = $conn->prepare($emailCheckSQL);
+    $emailCheckStmt->bindParam(':email', $user->email);
+    $emailCheckStmt->execute();
+    $emailCount = $emailCheckStmt->fetchColumn();
+
+    if ($emailCount > 0) {
+        echo json_encode(['status' => 'fail', 'message' => 'Email already registered']);
+        return;
+    }
+
     $sql = "INSERT INTO patient (id, first_name, last_name, email, password, created_at, verification_token, is_verified, is_veteran) 
             VALUES (null, :first_name, :last_name, :email, :password, :created_at, :verification_token, 0, 0)";
     $stmt = $conn->prepare($sql);
@@ -76,4 +89,5 @@ function handleSignup($conn) {
 
     echo json_encode($response);
 }
+
 ?>
